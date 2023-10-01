@@ -1,0 +1,13 @@
+import 'package:bedtime_stories/core/core.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'history_state.freezed.dart';
+
+@freezed
+class HistoryState extends BaseState with _$HistoryState {
+  const factory HistoryState({
+    @Default(false) bool loading, 
+    String? text,
+     // Add More State here
+  }) = _HistoryState;
+}

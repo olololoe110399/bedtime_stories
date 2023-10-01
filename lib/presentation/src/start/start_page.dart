@@ -90,7 +90,9 @@ class _PageState extends BasePageState<StartPage, StartState,
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => ref.read(appNavigatorProvider).push(
+                          const HistoryRoute(),
+                        ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
