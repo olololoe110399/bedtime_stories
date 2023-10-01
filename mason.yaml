@@ -1,0 +1,5 @@
+bricks:
+  hello: ^0.1.0+1
+  feature_template: 
+    path:
+      bricks/feature_template

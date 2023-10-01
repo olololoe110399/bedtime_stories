@@ -42,3 +42,19 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# generated file
+*.g.dart
+*.graphql.dart
+*.gr.dart
+*.freezed.dart
+*.mapper.dart
+*.config.dart
+*.gen.dart
+*.mocks.dart
+**/generated/
+
+.fake
+
+.mason
+mason-lock.json
