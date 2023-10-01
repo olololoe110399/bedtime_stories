@@ -1,9 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bedtime_stories/core/core.dart';
+import 'package:bedtime_stories/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'splash_vm.dart';
-import 'splash_state.dart';
 
 @RoutePage()
 class SplashPage extends StatefulHookConsumerWidget {
@@ -13,11 +12,22 @@ class SplashPage extends StatefulHookConsumerWidget {
   ConsumerState<SplashPage> createState() => _PageState();
 }
 
-class _PageState extends BasePageState<SplashPage,SplashState,
+class _PageState extends BasePageState<SplashPage, SplashState,
     AutoDisposeStateNotifierProvider<SplashVM, WrapState<SplashState>>> {
   @override
   AutoDisposeStateNotifierProvider<SplashVM, WrapState<SplashState>>
       get provider => splashVMProvider;
+
+  @override
+  void initState() {
+    Future.delayed(
+      const Duration(seconds: 2),
+      () => ref.read(appNavigatorProvider).popAndPush(
+            const StartRoute(),
+          ),
+    );
+    super.initState();
+  }
 
   @override
   Widget buildPage(BuildContext context) {

@@ -98,10 +98,10 @@ flutter:
   fonts:
     - family: circe
       fonts:
-        - asset: asset/font/circe.ttf
+        - asset: assets/font/circe.ttf
     - family: product
       fonts:
-        - asset: asset/font/productsans.ttf
+        - asset: assets/font/productsans.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

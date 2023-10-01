@@ -5,13 +5,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'splash_event.dart';
 import 'splash_state.dart';
 
-final splashVMProvider = StateNotifierProvider.autoDispose<
-    SplashVM, WrapState<SplashState>>(
+final splashVMProvider =
+    StateNotifierProvider.autoDispose<SplashVM, WrapState<SplashState>>(
   (ref) => SplashVM(ref),
 );
 
-class SplashVM
-    extends BaseVM<SplashEvent, SplashState> {
+class SplashVM extends BaseVM<SplashEvent, SplashState> {
   SplashVM(Ref ref) : super(const SplashState(), ref);
 
   @override
@@ -19,14 +18,13 @@ class SplashVM
     switch (event.runtimeType) {
       case SplashEventLoaded:
         onSplashEventLoaded(event as SplashEventLoaded);
-        case SplashEventTextChanged:
+      case SplashEventTextChanged:
         onSplashEventTextChanged(event as SplashEventTextChanged);
-         // Add More Event here
+        // Add More Event here
         break;
       default:
     }
   }
-
 
   Future<void> onSplashEventLoaded(
     SplashEventLoaded event,
@@ -39,5 +37,4 @@ class SplashVM
   ) async {
     // TODO: Implement SplashEventTextChanged
   }
-
 }

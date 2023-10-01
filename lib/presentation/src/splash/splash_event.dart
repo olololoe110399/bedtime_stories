@@ -5,7 +5,6 @@ part 'splash_event.freezed.dart';
 
 @freezed
 class SplashEvent extends BaseEvent with _$SplashEvent {
-  
   const factory SplashEvent.loaded(
     bool loading,
   ) = SplashEventLoaded;
