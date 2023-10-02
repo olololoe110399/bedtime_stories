@@ -80,7 +80,9 @@ class _PageState extends BasePageState<StartPage, StartState,
                           color: AppColors.darkBlue,
                         ),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () => ref.read(appRouterProvider).push(
+                                const DefineStoryRoute(),
+                              ),
                           icon: const Icon(
                             Icons.arrow_forward_ios,
                             color: Colors.white,
