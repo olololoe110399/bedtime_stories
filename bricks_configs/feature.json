@@ -2,11 +2,6 @@
   "name": "bedtime_stories",
   "states":[
         {
-          "name": "loading",
-          "type":  "bool",
-          "default": "false"
-        },        
-        {
           "name": "text",
           "type": "String",
           "default": false
@@ -15,12 +10,7 @@
   "events": [
     {
       "name": "loaded",
-      "variables": [
-        {
-          "name": "loading",
-          "type": "bool"
-        }
-      ]
+      "variables": []
     },{
       "name": "textChanged",
       "variables": [

@@ -270,6 +270,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.1"
+  flutter_jailbreak_detection:
+    dependency: "direct main"
+    description:
+      name: flutter_jailbreak_detection
+      sha256: "67ff11ea41965152d24db7104da1f9b343f94ada64c2a9e309ec4d753a12d281"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.10.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -304,6 +312,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_udid:
+    dependency: "direct main"
+    description:
+      name: flutter_udid
+      sha256: "3b25da919eee10cc757d47c2c59d96958b86a17418ae3775b7aef090929cfffb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -573,6 +589,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  safe_device:
+    dependency: "direct main"
+    description:
+      name: safe_device
+      sha256: "7a7e49c6cd0a33798ae604657b9876aadfc1678c9be66a829b36a987c8e4bfd1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.4"
   shared_preferences:
     dependency: transitive
     description:
@@ -746,6 +770,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  trust_location:
+    dependency: transitive
+    description:
+      name: trust_location
+      sha256: "2457f4bcd9ef8423fd12d8ae1701040ecef37a488e4a46bfa50bad26d8cf7d80"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.13"
   typed_data:
     dependency: transitive
     description:

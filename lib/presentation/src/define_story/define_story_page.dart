@@ -31,6 +31,10 @@ class _PageState extends BasePageState<
     final age = useState(1.0);
     final gender = useState<int?>(0);
     final charactors = useState<List>(['']);
+    final childName = useState('');
+    final venue = useState('');
+    final language = useState('English');
+    final inference_id = useState('nitrosocke/Arcane-Diffusion');
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -48,9 +52,9 @@ class _PageState extends BasePageState<
         title: const Text(
           "Define your story",
           style: TextStyle(
-            fontSize: Dimens.d30,
-            fontFamily: 'circe',
+            fontSize: Dimens.d26,
             fontWeight: FontWeight.w700,
+            fontFamily: 'circe',
             color: AppColors.black,
           ),
         ),
@@ -67,9 +71,6 @@ class _PageState extends BasePageState<
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: Dimens.d20,
-                        ),
                         _buildTitle(
                           'Child\'s name',
                         ),
@@ -79,7 +80,8 @@ class _PageState extends BasePageState<
                         DynamicTextfield(
                           key: UniqueKey(),
                           hintText: "Alex",
-                          onChanged: (v) {},
+                          initialValue: childName.value,
+                          onChanged: (v) => childName.value = v,
                         ),
                         const SizedBox(
                           height: Dimens.d20,
@@ -118,7 +120,8 @@ class _PageState extends BasePageState<
                         DynamicTextfield(
                           key: UniqueKey(),
                           hintText: "e.g. in a castle, on Mars",
-                          onChanged: (v) {},
+                          initialValue: venue.value,
+                          onChanged: (v) => venue.value = v,
                         ),
                         const SizedBox(
                           height: Dimens.d20,
@@ -156,10 +159,13 @@ class _PageState extends BasePageState<
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkBlue,
-                    minimumSize: const Size.fromHeight(50), // NEW
+                    minimumSize: const Size.fromHeight(50),
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
+                      print('charactors');
+                      print(charactors.value);
+                      print(charactors.value);
                       // TODO: Navigate to next page
                       // TODO: Save data to state
                     }

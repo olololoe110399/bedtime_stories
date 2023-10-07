@@ -38,8 +38,8 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
       body: Column(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.width,
+            height: mediaQueryData.size.height * 0.3,
+            width: mediaQueryData.size.width,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/img/searchBg.png"),
@@ -65,7 +65,7 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Expanded(child: Container()),
+                  const Spacer(),
                   Container(
                     height: Dimens.d70,
                     decoration: const BoxDecoration(
@@ -109,34 +109,28 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
             ),
           ),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(Dimens.d30),
-              width: MediaQuery.of(context).size.width,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          storyWidget(
-                            "Title: The Little Red Riding Hood",
-                            "September 18, 2023 at 10:00 AM",
-                            "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
-                          ),
-                          storyWidget(
-                            "Title: The Little Red Riding Hood",
-                            "September 18, 2023 at 10:00 AM",
-                            "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
-                          ),
-                        ],
-                      ),
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(Dimens.d30),
+                width: mediaQueryData.size.width,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    storyWidget(
+                      "Title: The Little Red Riding Hood",
+                      "September 18, 2023 at 10:00 AM",
+                      "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
                     ),
-                  )
-                ],
+                    storyWidget(
+                      "Title: The Little Red Riding Hood",
+                      "September 18, 2023 at 10:00 AM",
+                      "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
+                    ),
+                  ],
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -160,83 +154,79 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
         ),
         child: Stack(
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(Dimens.d30),
-                  ),
-                  child: Container(
-                    height: Dimens.d125,
-                    width: Dimens.d150,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/img/iconBgNew.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(Dimens.d30),
+              ),
+              child: Container(
+                height: Dimens.d125,
+                width: Dimens.d150,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/img/iconBgNew.png'),
+                    fit: BoxFit.contain,
                   ),
                 ),
-              ],
+              ),
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(Dimens.d15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+            Container(
+              width: mediaQueryData.size.width,
+              height: mediaQueryData.size.height,
+              padding: const EdgeInsets.all(Dimens.d15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${content.length} words',
+                        style: const TextStyle(
+                          fontSize: Dimens.d10,
+                          color: Colors.grey,
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: Dimens.d5,
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: Dimens.d19,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    date,
+                    style: TextStyle(
+                      fontSize: Dimens.d13,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.darkBlue,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${content.length} words',
+                          content,
                           style: const TextStyle(
-                            fontSize: Dimens.d10,
-                            color: Colors.grey,
+                            fontSize: Dimens.d16,
+                            fontWeight: FontWeight.w500,
                           ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         )
                       ],
                     ),
-                    const SizedBox(
-                      height: Dimens.d5,
-                    ),
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: Dimens.d19,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        fontSize: Dimens.d13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.darkBlue,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            content,
-                            style: const TextStyle(
-                              fontSize: Dimens.d16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -30,10 +30,15 @@ abstract class BasePageStateDelegete<T extends StatefulHookConsumerWidget,
 
   P get provider;
 
+  late MediaQueryData mediaQueryData;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     AppDimen.of(context);
+    mediaQueryData = MediaQuery.of(context);
+
+    MediaQuery.of(context);
 
     final isLoading = ref.watch(provider.select((value) => value.isLoading));
 

@@ -12,13 +12,19 @@ final {{feature.camelCase()}}VMProvider = StateNotifierProvider.autoDispose<
 
 class {{feature.pascalCase()}}VM
     extends BaseVM<{{feature.pascalCase()}}Event, {{feature.pascalCase()}}State> {
-  {{feature.pascalCase()}}VM(Ref ref) : super(const {{feature.pascalCase()}}State(), ref);
+  {{feature.pascalCase()}}VM(Ref ref) : super(const {{feature.pascalCase()}}State(), ref){
+    Future.microtask(
+      () {
+        add(const {{feature.pascalCase()}}EventLoaded());
+      },
+    );
+  }
 
   @override
   void add({{feature.pascalCase()}}Event event) {
-    switch (event.runtimeType) {
-      {{#events}}case {{feature.pascalCase()}}Event{{name.pascalCase()}}:
-        on{{feature.pascalCase()}}Event{{name.pascalCase()}}(event as {{feature.pascalCase()}}Event{{name.pascalCase()}});
+    switch (event) {
+      {{#events}}case {{feature.pascalCase()}}Event{{name.pascalCase()}} event:
+        on{{feature.pascalCase()}}Event{{name.pascalCase()}}(event);
         {{/events}} // Add More Event here
         break;
       default:

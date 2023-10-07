@@ -5,28 +5,26 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'history_event.dart';
 import 'history_state.dart';
 
-final historyVMProvider = StateNotifierProvider.autoDispose<
-    HistoryVM, WrapState<HistoryState>>(
+final historyVMProvider =
+    StateNotifierProvider.autoDispose<HistoryVM, WrapState<HistoryState>>(
   (ref) => HistoryVM(ref),
 );
 
-class HistoryVM
-    extends BaseVM<HistoryEvent, HistoryState> {
+class HistoryVM extends BaseVM<HistoryEvent, HistoryState> {
   HistoryVM(Ref ref) : super(const HistoryState(), ref);
 
   @override
   void add(HistoryEvent event) {
-    switch (event.runtimeType) {
-      case HistoryEventLoaded:
-        onHistoryEventLoaded(event as HistoryEventLoaded);
-        case HistoryEventTextChanged:
-        onHistoryEventTextChanged(event as HistoryEventTextChanged);
-         // Add More Event here
+    switch (event) {
+      case HistoryEventLoaded event:
+        onHistoryEventLoaded(event);
+      case HistoryEventTextChanged event:
+        onHistoryEventTextChanged(event);
+        // Add More Event here
         break;
       default:
     }
   }
-
 
   Future<void> onHistoryEventLoaded(
     HistoryEventLoaded event,
@@ -39,5 +37,4 @@ class HistoryVM
   ) async {
     // TODO: Implement HistoryEventTextChanged
   }
-
 }

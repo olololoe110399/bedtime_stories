@@ -5,28 +5,26 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'define_story_event.dart';
 import 'define_story_state.dart';
 
-final defineStoryVMProvider = StateNotifierProvider.autoDispose<
-    DefineStoryVM, WrapState<DefineStoryState>>(
+final defineStoryVMProvider = StateNotifierProvider.autoDispose<DefineStoryVM,
+    WrapState<DefineStoryState>>(
   (ref) => DefineStoryVM(ref),
 );
 
-class DefineStoryVM
-    extends BaseVM<DefineStoryEvent, DefineStoryState> {
+class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   DefineStoryVM(Ref ref) : super(const DefineStoryState(), ref);
 
   @override
   void add(DefineStoryEvent event) {
-    switch (event.runtimeType) {
-      case DefineStoryEventLoaded:
-        onDefineStoryEventLoaded(event as DefineStoryEventLoaded);
-        case DefineStoryEventTextChanged:
-        onDefineStoryEventTextChanged(event as DefineStoryEventTextChanged);
-         // Add More Event here
+    switch (event) {
+      case DefineStoryEventLoaded event:
+        onDefineStoryEventLoaded(event);
+      case DefineStoryEventTextChanged event:
+        onDefineStoryEventTextChanged(event);
+        // Add More Event here
         break;
       default:
     }
   }
-
 
   Future<void> onDefineStoryEventLoaded(
     DefineStoryEventLoaded event,
@@ -39,5 +37,4 @@ class DefineStoryVM
   ) async {
     // TODO: Implement DefineStoryEventTextChanged
   }
-
 }

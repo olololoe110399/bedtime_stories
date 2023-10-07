@@ -19,17 +19,6 @@ class _PageState extends BasePageState<SplashPage, SplashState,
       get provider => splashVMProvider;
 
   @override
-  void initState() {
-    Future.delayed(
-      const Duration(seconds: 2),
-      () => ref.read(appNavigatorProvider).popAndPush(
-            const StartRoute(),
-          ),
-    );
-    super.initState();
-  }
-
-  @override
   Widget buildPage(BuildContext context) {
     return const Scaffold();
   }

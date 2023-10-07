@@ -16,5 +16,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: StartRoute.page),
         AutoRoute(page: HistoryRoute.page),
         AutoRoute(page: DefineStoryRoute.page),
+        AutoRoute(page: JailbreakRoute.page),
       ];
 }
