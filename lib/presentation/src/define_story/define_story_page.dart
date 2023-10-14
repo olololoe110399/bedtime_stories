@@ -24,6 +24,7 @@ class _PageState extends BasePageState<
   @override
   AutoDisposeStateNotifierProvider<DefineStoryVM, WrapState<DefineStoryState>>
       get provider => defineStoryVMProvider;
+
   final _formKey = GlobalKey<FormState>();
 
   @override

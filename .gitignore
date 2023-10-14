@@ -58,3 +58,4 @@ app.*.map.json
 
 .mason
 mason-lock.json
+.env
