@@ -19,24 +19,7 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   DefineStoryVM(
     Ref ref, {
     required this.completionUsecase,
-  }) : super(const DefineStoryState(), ref) {
-    Future.microtask(() {
-      runCatching<ChatCompletion>(
-        completionUsecase.call(
-          const CompletionParams(messages: [
-            Message(
-              content: 'Say this is a test!',
-              role: 'user',
-            )
-          ]),
-        ),
-        doOnSuccess: (data) {
-          logD(data);
-        },
-        isHandleLoading: false,
-      );
-    });
-  }
+  }) : super(const DefineStoryState(), ref);
 
   CompletionUsecase completionUsecase;
 
@@ -45,8 +28,8 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
     switch (event) {
       case DefineStoryEventLoaded event:
         onDefineStoryEventLoaded(event);
-      case DefineStoryEventTextChanged event:
-        onDefineStoryEventTextChanged(event);
+      case DefineStoryEventOnPressed event:
+        onDefineStoryEventOnPressed(event);
         // Add More Event here
         break;
       default:
@@ -59,9 +42,30 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
     // TODO: Implement DefineStoryEventLoaded
   }
 
-  Future<void> onDefineStoryEventTextChanged(
-    DefineStoryEventTextChanged event,
+  Future<void> onDefineStoryEventOnPressed(
+    DefineStoryEventOnPressed event,
   ) async {
-    // TODO: Implement DefineStoryEventTextChanged
+    final storyPrompt =
+        "Please write a short story in ${event.language}. In this event, ${event.childName} is the main character, a ${event.age}-year-old ${event.gender}. The story unfolds at ${event.venue} with the following characters: ${event.characters.join(', ')}. As for the story, create an AI image generator request. This request outlines the overall image, beginning with 'Image Prompt:' at the start. ";
+
+    runCatching<ChatCompletion>(
+      completionUsecase.call(
+        CompletionParams(messages: [
+          Message(
+            content:
+                'You are children\'s book author. You are writing a story about ${event.childName}.',
+            role: 'system',
+          ),
+          Message(
+            role: 'user',
+            content: storyPrompt,
+          )
+        ]),
+      ),
+      doOnSuccess: (data) {
+        logD(data);
+        navigator.showSuccessSnackBar(message: data.choices[0].message.content);
+      },
+    );
   }
 }

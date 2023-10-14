@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bedtime_stories/presentation/src/define_story/define_story_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,19 @@ import 'package:bedtime_stories/core/core.dart';
 
 import 'define_story_state.dart';
 import 'define_story_vm.dart';
+
+String titleGender(index) {
+  switch (index) {
+    case 0:
+      return 'Boy';
+    case 1:
+      return 'Girl';
+    case 2:
+      return 'Diverse';
+    default:
+      return '';
+  }
+}
 
 @RoutePage()
 class DefineStoryPage extends StatefulHookConsumerWidget {
@@ -31,11 +45,11 @@ class _PageState extends BasePageState<
   Widget buildPage(BuildContext context) {
     final age = useState(1.0);
     final gender = useState<int?>(0);
-    final charactors = useState<List>(['']);
+    final characters = useState<List<String>>(['']);
     final childName = useState('');
     final venue = useState('');
     final language = useState('English');
-    final inference_id = useState('nitrosocke/Arcane-Diffusion');
+    final inferenceId = useState('nitrosocke/Arcane-Diffusion');
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -128,7 +142,7 @@ class _PageState extends BasePageState<
                           height: Dimens.d20,
                         ),
                         _buildTitle(
-                          'Additional charactors:',
+                          'Additional characters:',
                         ),
                         const SizedBox(
                           height: Dimens.d5,
@@ -140,12 +154,12 @@ class _PageState extends BasePageState<
                         const SizedBox(
                           height: Dimens.d10,
                         ),
-                        _buildCharactors(charactors),
-                        if (charactors.value.length < 5) ...[
+                        _buildCharacters(characters),
+                        if (characters.value.length < 5) ...[
                           const SizedBox(
                             height: Dimens.d10,
                           ),
-                          _buildButtonAddCharactors(charactors),
+                          _buildButtonAddCharacters(characters),
                         ]
                       ],
                     ),
@@ -164,11 +178,17 @@ class _PageState extends BasePageState<
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      print('charactors');
-                      print(charactors.value);
-                      print(charactors.value);
-                      // TODO: Navigate to next page
-                      // TODO: Save data to state
+                      ref.read(provider.notifier).add(
+                            DefineStoryEvent.onPressed(
+                              age: age.value.round().toString(),
+                              gender: titleGender(gender.value),
+                              characters: characters.value,
+                              childName: childName.value,
+                              venue: venue.value,
+                              language: language.value,
+                              inferenceId: inferenceId.value,
+                            ),
+                          );
                     }
                   },
                   child: const Text('Next'),
@@ -181,14 +201,14 @@ class _PageState extends BasePageState<
     );
   }
 
-  Center _buildButtonAddCharactors(
-    ValueNotifier<List<dynamic>> charactors,
+  Center _buildButtonAddCharacters(
+    ValueNotifier<List<dynamic>> characters,
   ) {
     return Center(
       child: TextButton.icon(
         onPressed: () {
-          charactors.value = List.from(
-            [...charactors.value, ''],
+          characters.value = List<String>.from(
+            [...characters.value, ''],
           );
         },
         icon: Icon(
@@ -208,18 +228,18 @@ class _PageState extends BasePageState<
     );
   }
 
-  ListView _buildCharactors(ValueNotifier<List<dynamic>> charactors) {
+  ListView _buildCharacters(ValueNotifier<List<dynamic>> characters) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: charactors.value.length,
+      itemCount: characters.value.length,
       shrinkWrap: true,
       itemBuilder: (context, index) => Row(
         children: [
           Expanded(
             child: DynamicTextfield(
               key: UniqueKey(),
-              initialValue: charactors.value[index],
-              onChanged: (v) => charactors.value[index] = v,
+              initialValue: characters.value[index],
+              onChanged: (v) => characters.value[index] = v,
             ),
           ),
           const SizedBox(width: 20),
@@ -228,7 +248,10 @@ class _PageState extends BasePageState<
             color: AppColors.darkBlue,
             padding: EdgeInsets.zero,
             onPressed: () {
-              charactors.value = List.from(charactors.value)..removeAt(index);
+              if (characters.value.length > 1) {
+                characters.value = List<String>.from(characters.value)
+                  ..removeAt(index);
+              }
             },
             icon: const Icon(
               Icons.remove_circle_rounded,
@@ -261,23 +284,10 @@ class _PageState extends BasePageState<
       children: List<Widget>.generate(
         3,
         (int index) {
-          String title(index) {
-            switch (index) {
-              case 0:
-                return 'Boy';
-              case 1:
-                return 'Girl';
-              case 2:
-                return 'Diverse';
-              default:
-                return '';
-            }
-          }
-
           return ChoiceChip(
             selectedColor: AppColors.darkBlue,
             label: Text(
-              title(index),
+              titleGender(index),
               style: const TextStyle(
                 fontSize: Dimens.d18,
                 color: AppColors.white,
