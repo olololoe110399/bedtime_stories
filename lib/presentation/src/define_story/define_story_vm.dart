@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/domain/domain.dart';
+import 'package:dartz/dartz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'define_story_event.dart';
@@ -11,7 +12,9 @@ final defineStoryVMProvider = StateNotifierProvider.autoDispose<DefineStoryVM,
     WrapState<DefineStoryState>>(
   (ref) => DefineStoryVM(
     ref,
-    completionUsecase: GetIt.I.get<CompletionUsecase>(),
+    completionUsecase: GetIt.instance.get<CompletionUsecase>(),
+    getStoriesStreamUsecase: GetIt.instance.get<GetStoriesStreamUsecase>(),
+    initDatabaseStoryUsecase: GetIt.instance.get<InitDatabaseStoryUsecase>(),
   ),
 );
 
@@ -19,9 +22,17 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   DefineStoryVM(
     Ref ref, {
     required this.completionUsecase,
-  }) : super(const DefineStoryState(), ref);
+    required this.getStoriesStreamUsecase,
+    required this.initDatabaseStoryUsecase,
+  }) : super(const DefineStoryState(), ref) {
+    Future.microtask(() {
+      add(const DefineStoryEventLoaded());
+    });
+  }
 
   CompletionUsecase completionUsecase;
+  GetStoriesStreamUsecase getStoriesStreamUsecase;
+  InitDatabaseStoryUsecase initDatabaseStoryUsecase;
 
   @override
   void add(DefineStoryEvent event) {
@@ -39,7 +50,19 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   Future<void> onDefineStoryEventLoaded(
     DefineStoryEventLoaded event,
   ) async {
-    // TODO: Implement DefineStoryEventLoaded
+    await initDatabaseStoryUsecase.call(unit);
+    getStoriesStreamUsecase
+        .call(const GetStoriesStreamParams())
+        .listen((event) {
+      event.fold(
+        (l) => addException(
+          AppExceptionWrapper(appError: l),
+        ),
+        (r) {
+          print(r);
+        },
+      );
+    }).disposeBy(disposeBag);
   }
 
   Future<void> onDefineStoryEventOnPressed(

@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/di/di.dart';
 
 class AppConfig {
@@ -15,6 +16,7 @@ class AppConfig {
   Future<void> init() => _asyncMemoizer.runOnce(config);
 
   Future<void> config() async {
+    await HiveDatabaseManager().start();
     // await Firebase.initializeApp();
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);

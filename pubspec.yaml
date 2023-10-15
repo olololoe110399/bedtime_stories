@@ -65,6 +65,10 @@ dependencies:
   shared_preferences: ^2.2.2
   equatable: ^2.0.5
   envied: ^0.3.0+3
+  lottie: ^2.6.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  uuid: ^4.1.0
 
 dev_dependencies:
   auto_route_generator: ^7.3.1
@@ -81,6 +85,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   envied_generator: ^0.3.0+3
+  hive_generator: ^2.0.1
 
 flutter_intl:
   enabled: true
@@ -102,6 +107,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/img/
+    - assets/json/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

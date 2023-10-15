@@ -2,7 +2,7 @@ import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/data/data.dart';
 import 'package:injectable/injectable.dart';
 
-abstract class OpenAIRemoteDataSource {
+abstract class RemoteDataSource {
   Future<ChatCompletionModel> completion({
     required String model,
     required int maxTokens,
@@ -11,11 +11,11 @@ abstract class OpenAIRemoteDataSource {
   });
 }
 
-@LazySingleton(as: OpenAIRemoteDataSource)
-class OpenAIRemoteDataSourceImpl implements OpenAIRemoteDataSource {
+@LazySingleton(as: RemoteDataSource)
+class RemoteDataSourceImpl implements RemoteDataSource {
   final RestNonAuthClient client;
 
-  OpenAIRemoteDataSourceImpl({required this.client});
+  RemoteDataSourceImpl({required this.client});
 
   @override
   Future<ChatCompletionModel> completion({

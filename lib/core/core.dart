@@ -14,3 +14,6 @@ export 'src/network/network.dart';
 export 'src/model/model.dart';
 export 'src/usecases/usecases.dart';
 export 'src/preference/preference.dart';
+export 'src/hive/hive.dart';
+export 'src/extension/extension.dart';
+export 'src/stream/stream.dart';

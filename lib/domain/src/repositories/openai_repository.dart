@@ -8,4 +8,8 @@ abstract class OpenAIRepository {
     required double temperature,
     required List<Message> messages,
   });
+
+  Stream<Result<List<Story>>> streamStories();
+
+  Future<UnitResult> initDatabaseStory();
 }

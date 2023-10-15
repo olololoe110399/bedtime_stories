@@ -15,6 +15,7 @@ abstract class BaseVMDelegete<E extends BaseEvent, S extends BaseState>
     this.navigator = ref.watch(appNavigatorProvider);
   }
   late final AppNavigator navigator;
+  final DisposeBag disposeBag = DisposeBag();
 
   S get dataState => super.state.data;
 
@@ -27,6 +28,12 @@ abstract class BaseVMDelegete<E extends BaseEvent, S extends BaseState>
     } else {
       logD('Cannot set state when widget is not mounted');
     }
+  }
+
+  @override
+  void dispose() {
+    disposeBag.dispose();
+    super.dispose();
   }
 
   void emit(WrapState<S> newState) {
