@@ -5,3 +5,4 @@ export 'primitive_database.dart';
 export 'primitive_keys.dart';
 export 'hive_encryption.dart';
 export 'hive_types.dart';
+export 'secure_database_manager.dart';

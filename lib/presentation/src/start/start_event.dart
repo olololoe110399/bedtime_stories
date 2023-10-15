@@ -5,14 +5,7 @@ part 'start_event.freezed.dart';
 
 @freezed
 class StartEvent extends BaseEvent with _$StartEvent {
-  
-  const factory StartEvent.loaded(
-    bool loading,
-  ) = StartEventLoaded;
-
-  const factory StartEvent.textChanged(
-    String text,
-  ) = StartEventTextChanged;
+  const factory StartEvent.loaded() = StartEventLoaded;
 
   // Add More Events here
 }

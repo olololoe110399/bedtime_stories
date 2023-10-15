@@ -83,7 +83,6 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
           title: titleStory.isNotEmpty ? titleStory.first : '',
           microsecondsSinceEpoch: StringUtils.idGenerator(),
         );
-        await localDataSource.initDatabaseStory();
         await localDataSource.addStoryItem(storyModel);
         return storyDataMapper.mapToEntity(storyModel);
       },

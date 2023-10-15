@@ -1,3 +1,4 @@
+import 'package:bedtime_stories/data/data.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -19,6 +20,11 @@ abstract class ServiceModule {
           encryptedSharedPreferences: true,
         ),
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+      );
+
+  @injectable
+  StoryHiveOperation get storyHiveOperation => StoryHiveOperation(
+        primitiveDatabase: SecureDatabaseManager(),
       );
 
   @singleton

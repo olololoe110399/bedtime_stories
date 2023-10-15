@@ -6,6 +6,8 @@ part 'history_event.freezed.dart';
 @freezed
 class HistoryEvent extends BaseEvent with _$HistoryEvent {
   const factory HistoryEvent.loaded() = HistoryEventLoaded;
+  const factory HistoryEvent.searchChanged(String searchKey) =
+      HistoryEventSearchChanged;
 
   // Add More Events here
 }

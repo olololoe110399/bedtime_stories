@@ -8,6 +8,7 @@ part 'history_state.freezed.dart';
 class HistoryState extends BaseState with _$HistoryState {
   const factory HistoryState({
     @Default(<Story>[]) List<Story> stories,
+    @Default('') String searchKey,
     // Add More State here
   }) = _HistoryState;
 }

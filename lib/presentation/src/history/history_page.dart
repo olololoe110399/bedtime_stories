@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/domain/domain.dart';
+import 'package:bedtime_stories/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'history_vm.dart';
-import 'history_state.dart';
 
 @RoutePage()
 class HistoryPage extends StatefulHookConsumerWidget {
@@ -22,7 +21,19 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
 
   @override
   Widget buildPage(BuildContext context) {
-    final stories = ref.watch(provider.select((value) => value.data.stories));
+    final stories = ref.watch(
+      provider.select(
+        (value) => value.data.stories
+            .where(
+              (element) => value.data.searchKey.isEmpty
+                  ? true
+                  : element.title
+                      .toLowerCase()
+                      .contains(value.data.searchKey.toLowerCase()),
+            )
+            .toList(),
+      ),
+    );
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -89,16 +100,21 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
                             size: Dimens.d30,
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: TextField(
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: Dimens.d18,
                               fontFamily: 'circe',
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Search for a story",
                             ),
+                            onChanged: (value) {
+                              ref
+                                  .read(provider.notifier)
+                                  .add(HistoryEvent.searchChanged(value));
+                            },
                           ),
                         ),
                       ],
@@ -134,7 +150,8 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
     Story story,
   ) {
     final title = story.title;
-    final date = "September 18, 2023 at 10:00 AM";
+    final date =
+        story.date?.toStringWithFormat('MMMM dd, yyyy at hh:mm a') ?? 'No date';
     final content = story.story;
     return InkWell(
       onTap: () => openStoryPage(story.id),
@@ -187,13 +204,16 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
                     height: Dimens.d5,
                   ),
                   Text(
-                    title,
+                    title.replaceFirst('Title: ', ""),
                     style: const TextStyle(
                       fontSize: Dimens.d19,
                       fontWeight: FontWeight.w700,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    height: Dimens.d5,
                   ),
                   Text(
                     date,

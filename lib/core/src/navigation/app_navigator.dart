@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:bedtime_stories/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
 final appNavigatorProvider = Provider<AppNavigator>((ref) {
   return AppNavigator(ref.read(appRouterProvider));
@@ -118,5 +119,11 @@ class AppNavigator with LogMixin {
       duration: duration,
       backgroundColor: Colors.green,
     );
+  }
+
+  void shareWithResult(String content) async {
+    await Share.shareWithResult(content);
+    logD('Share With Result!');
+    logD(content);
   }
 }

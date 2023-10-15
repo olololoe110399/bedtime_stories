@@ -8,5 +8,11 @@ part 'story_detail_state.freezed.dart';
 class StoryDetailState extends BaseState with _$StoryDetailState {
   const factory StoryDetailState({
     @Default(null) Story? story,
+    @Default(1.0) double volume,
+    @Default(0.8) double pitch,
+    @Default(0.5) double speechRate,
+    @Default(null) List<String>? languages,
+    @Default("en-US") String langCode,
+    @Default(false) bool isSpeaking,
   }) = _StoryDetailState;
 }

@@ -11,7 +11,7 @@ class StoryHiveModel with EquatableMixin, HiveModelMixin {
   static const String storyKey = 'story';
 
   @override
-  String get key => storyKey;
+  String get key => microsecondsSinceEpoch ?? storyKey;
 
   @HiveField(0)
   final String? story;

@@ -2,7 +2,7 @@ import 'package:bedtime_stories/core/core.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
-@Injectable(as: PrimitiveDatabase)
+@LazySingleton(as: PrimitiveDatabase)
 class SecureDatabaseManager extends PrimitiveDatabase {
   final _secureStorage = const FlutterSecureStorage();
 

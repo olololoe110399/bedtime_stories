@@ -69,6 +69,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   uuid: ^4.1.0
+  share_plus: ^4.5.3
+  flutter_tts: ^3.8.3
+  avatar_glow: ^2.0.2
 
 dev_dependencies:
   auto_route_generator: ^7.3.1

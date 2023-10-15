@@ -93,7 +93,6 @@ class _PageState extends BasePageState<
                           height: Dimens.d10,
                         ),
                         DynamicTextfield(
-                          key: UniqueKey(),
                           hintText: "Alex",
                           initialValue: childName.value,
                           onChanged: (v) => childName.value = v,
@@ -102,15 +101,16 @@ class _PageState extends BasePageState<
                           height: Dimens.d20,
                         ),
                         _buildTitle(
-                          'Child\' age: ${age.value.round() + 1} years',
+                          'Child\' age: ${age.value.round()} years',
                         ),
                         const SizedBox(
                           height: Dimens.d5,
                         ),
                         Slider(
                           value: age.value.roundToDouble(),
-                          max: 9,
-                          divisions: 9,
+                          min: 1,
+                          max: 10,
+                          divisions: 10,
                           thumbColor: AppColors.darkBlue,
                           inactiveColor: AppColors.white,
                           activeColor: AppColors.darkBlue,
@@ -133,7 +133,6 @@ class _PageState extends BasePageState<
                           height: Dimens.d10,
                         ),
                         DynamicTextfield(
-                          key: UniqueKey(),
                           hintText: "e.g. in a castle, on Mars",
                           initialValue: venue.value,
                           onChanged: (v) => venue.value = v,
@@ -177,6 +176,7 @@ class _PageState extends BasePageState<
                     minimumSize: const Size.fromHeight(50),
                   ),
                   onPressed: () {
+                    ViewUtils.hideKeyboard(context);
                     if (_formKey.currentState?.validate() ?? false) {
                       ref.read(provider.notifier).add(
                             DefineStoryEvent.onPressed(
