@@ -33,6 +33,6 @@ mixin AppErrorListenerMixin<T extends StatefulHookConsumerWidget,
   void onRefreshTokenFail(
     AppExceptionWrapper appExceptionWrapper,
   ) {
-    ref.read(appNavigatorProvider).replaceAll([const SplashRoute()]);
+    ref.read(appNavigatorProvider).replaceAll([const StartRoute()]);
   }
 }

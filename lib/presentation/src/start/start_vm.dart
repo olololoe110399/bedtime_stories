@@ -37,9 +37,31 @@ class StartVM extends BaseVM<StartEvent, StartState> {
     }
   }
 
+  Future<bool> checkJailbreakStatus() async {
+    bool jailbrokenOrRooted = false;
+    // try {
+    //   jailbrokenOrRooted = await FlutterJailbreakDetection.jailbroken ||
+    //       !await SafeDevice.isSafeDevice;
+    // } catch (e) {
+    //   jailbrokenOrRooted = true;
+    // }
+    return jailbrokenOrRooted;
+  }
+
   Future<void> onStartEventLoaded(
     StartEventLoaded event,
   ) async {
+    Future.delayed(const Duration(seconds: 2))
+        .then((_) => checkJailbreakStatus())
+        .then(
+      (isJailBreak) {
+        if (isJailBreak) {
+          navigator.popAndPush(
+            const JailbreakRoute(),
+          );
+        }
+      },
+    );
     await initDatabaseStoryUsecase.call(unit);
   }
 }

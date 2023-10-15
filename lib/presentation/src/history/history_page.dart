@@ -130,6 +130,9 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
           Expanded(
             child: SingleChildScrollView(
               child: Container(
+                constraints: BoxConstraints(
+                  minHeight: mediaQueryData.size.height * 0.6,
+                ),
                 padding: const EdgeInsets.all(Dimens.d30),
                 width: mediaQueryData.size.width,
                 color: Colors.white,

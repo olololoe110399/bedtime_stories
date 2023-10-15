@@ -13,8 +13,7 @@ class AppRouter extends _$AppRouter {
   RouteType get defaultRouteType => const RouteType.adaptive();
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: SplashRoute.page, initial: true),
-        AutoRoute(page: StartRoute.page),
+        AutoRoute(page: StartRoute.page, initial: true),
         AutoRoute(page: HistoryRoute.page),
         AutoRoute(page: DefineStoryRoute.page),
         AutoRoute(page: JailbreakRoute.page),
