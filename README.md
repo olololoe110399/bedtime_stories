@@ -1,7 +1,5 @@
 # Unique Bedtime Chronicles
 
-Welcome to **Unique Bedtime Chronicles**, a Flutter app that showcases various agents from the game Valorant. This app fetches agent data from an API and presents it in an interactive and visually appealing manner.
-
 Introducing **Unique Bedtime Chronicles** the groundbreaking mobile application poised to transform the way you connect with your child during those treasured bedtime moments. Our cutting-edge app redefines the art of bedtime storytelling by empowering you to craft enchanting bedtime tales meticulously tailored to your child's distinct interests and preferences. With **Unique Bedtime Chronicles** you'll forge a profound, lasting bond with your child while kindling their imagination like never before.
 
 ## Feature graphic
