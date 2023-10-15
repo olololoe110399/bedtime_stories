@@ -13,7 +13,6 @@ final defineStoryVMProvider = StateNotifierProvider.autoDispose<DefineStoryVM,
   (ref) => DefineStoryVM(
     ref,
     completionUsecase: GetIt.instance.get<CompletionUsecase>(),
-    getStoriesStreamUsecase: GetIt.instance.get<GetStoriesStreamUsecase>(),
     initDatabaseStoryUsecase: GetIt.instance.get<InitDatabaseStoryUsecase>(),
   ),
 );
@@ -22,7 +21,6 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   DefineStoryVM(
     Ref ref, {
     required this.completionUsecase,
-    required this.getStoriesStreamUsecase,
     required this.initDatabaseStoryUsecase,
   }) : super(const DefineStoryState(), ref) {
     Future.microtask(() {
@@ -31,7 +29,6 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   }
 
   CompletionUsecase completionUsecase;
-  GetStoriesStreamUsecase getStoriesStreamUsecase;
   InitDatabaseStoryUsecase initDatabaseStoryUsecase;
 
   @override
@@ -51,18 +48,6 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
     DefineStoryEventLoaded event,
   ) async {
     await initDatabaseStoryUsecase.call(unit);
-    getStoriesStreamUsecase
-        .call(const GetStoriesStreamParams())
-        .listen((event) {
-      event.fold(
-        (l) => addException(
-          AppExceptionWrapper(appError: l),
-        ),
-        (r) {
-          print(r);
-        },
-      );
-    }).disposeBy(disposeBag);
   }
 
   Future<void> onDefineStoryEventOnPressed(
@@ -71,7 +56,7 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
     final storyPrompt =
         "Please write a short story in ${event.language}. In this event, ${event.childName} is the main character, a ${event.age}-year-old ${event.gender}. The story unfolds at ${event.venue} with the following characters: ${event.characters.join(', ')}. As for the story, create an AI image generator request. This request outlines the overall image, beginning with 'Image Prompt:' at the start. ";
 
-    runCatching<ChatCompletion>(
+    await runCatching<Story>(
       completionUsecase.call(
         CompletionParams(messages: [
           Message(
@@ -86,8 +71,7 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
         ]),
       ),
       doOnSuccess: (data) {
-        logD(data);
-        navigator.showSuccessSnackBar(message: data.choices[0].message.content);
+        navigator.popAndPush(StoryDetailRoute(id: data.id));
       },
     );
   }

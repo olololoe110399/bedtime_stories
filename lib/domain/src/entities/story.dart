@@ -8,9 +8,13 @@ class Story with _$Story {
     @Default(Story.defaultId) String id,
     @Default(Story.defaultStory) String story,
     @Default(Story.defaultImagePath) String imagePath,
+    @Default(Story.defaultTitle) String title,
+    @Default(Story.defaultDate) DateTime? date,
   }) = _Story;
 
   static const defaultId = "";
   static const defaultStory = "";
   static const defaultImagePath = "";
+  static const defaultTitle = "";
+  static const DateTime? defaultDate = null;
 }

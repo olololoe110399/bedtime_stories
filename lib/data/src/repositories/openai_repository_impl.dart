@@ -39,7 +39,7 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
   }
 
   @override
-  Future<Result<ChatCompletion>> completion(
+  Future<Result<Story>> completion(
       {required String model,
       required int maxTokens,
       required double temperature,
@@ -52,21 +52,40 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
           temperature: temperature,
           messages: messageDataMapper.mapToListData(messages),
         );
-        if (chatCompletion.choices != null &&
-            chatCompletion.choices!.isNotEmpty) {
-          if (chatCompletion.choices!.first.message == null) {
-            throw Exception('message is null');
-          }
-          if (chatCompletion.choices!.first.message!.content!.isEmpty) {
-            throw Exception('message content is empty');
-          }
-          final storyModel = StoryHiveModel(
-            story: chatCompletion.choices!.first.message!.content!,
-            imagePath: '',
-          );
-          await localDataSource.addStoryItem(storyModel);
+        if (chatCompletion.choices != null && chatCompletion.choices!.isEmpty) {
+          throw Exception('choices is null or empty');
         }
-        return chatCompletionDataMapper.mapToEntity(chatCompletion);
+
+        if (chatCompletion.choices!.first.message == null) {
+          throw Exception('message is null');
+        }
+        if (chatCompletion.choices!.first.message!.content!.isEmpty) {
+          throw Exception('message content is empty');
+        }
+        final String newStory = chatCompletion.choices!.first.message!.content!;
+
+        final imagePrompts = [];
+        final storyParagraphs = [];
+        final titleStory = [];
+
+        for (final paragraph in newStory.split('\n\n')) {
+          if (paragraph.contains('Image Prompt:')) {
+            imagePrompts.add(paragraph);
+          } else if (paragraph.contains('Title:')) {
+            titleStory.add(paragraph);
+          } else {
+            storyParagraphs.add(paragraph);
+          }
+        }
+        final storyModel = StoryHiveModel(
+          story: storyParagraphs.join("\n\n"),
+          imagePath: imagePrompts.isNotEmpty ? imagePrompts.first : '',
+          title: titleStory.isNotEmpty ? titleStory.first : '',
+          microsecondsSinceEpoch: StringUtils.idGenerator(),
+        );
+        await localDataSource.initDatabaseStory();
+        await localDataSource.addStoryItem(storyModel);
+        return storyDataMapper.mapToEntity(storyModel);
       },
     );
   }
@@ -86,6 +105,14 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
         () async {
           await localDataSource.initDatabaseStory();
           return unit;
+        },
+      );
+
+  @override
+  Future<Result<Story>> getStoryById(String id) => handleCommon(
+        () async {
+          final data = await localDataSource.getStoryItem(id);
+          return storyDataMapper.mapToEntity(data);
         },
       );
 }

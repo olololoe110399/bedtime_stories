@@ -4,13 +4,13 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable()
-class CompletionUsecase implements UseCase<ChatCompletion, CompletionParams> {
+class CompletionUsecase implements UseCase<Story, CompletionParams> {
   final OpenAIRepository _repository;
 
   CompletionUsecase(this._repository);
 
   @override
-  Future<Result<ChatCompletion>> call(CompletionParams params) async {
+  Future<Result<Story>> call(CompletionParams params) async {
     return await _repository.completion(
       model: params.model,
       maxTokens: params.maxTokens,

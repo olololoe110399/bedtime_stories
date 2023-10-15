@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bedtime_stories/presentation/presentation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter/material.dart';
 
 part 'app_routes.gr.dart';
 
@@ -17,5 +18,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HistoryRoute.page),
         AutoRoute(page: DefineStoryRoute.page),
         AutoRoute(page: JailbreakRoute.page),
+        AutoRoute(page: StoryDetailRoute.page),
       ];
 }

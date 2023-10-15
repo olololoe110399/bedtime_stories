@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bedtime_stories/core/core.dart';
+import 'package:bedtime_stories/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'history_vm.dart';
@@ -21,6 +22,8 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
 
   @override
   Widget buildPage(BuildContext context) {
+    final stories = ref.watch(provider.select((value) => value.data.stories));
+
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: AppBar(
@@ -116,16 +119,7 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
                 color: Colors.white,
                 child: Column(
                   children: [
-                    storyWidget(
-                      "Title: The Little Red Riding Hood",
-                      "September 18, 2023 at 10:00 AM",
-                      "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
-                    ),
-                    storyWidget(
-                      "Title: The Little Red Riding Hood",
-                      "September 18, 2023 at 10:00 AM",
-                      "Once upon a time, in a cozy living room, Luffy, a courageous young boy with a heart full of determination, prepared for an extraordinary adventure. He put on his red pirate hat, donned his straw sandals, and tightly clenched his beloved rubber fist. ",
-                    ),
+                    ...stories.map(storyWidget),
                   ],
                 ),
               ),
@@ -137,12 +131,13 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
   }
 
   InkWell storyWidget(
-    String title,
-    String date,
-    String content,
+    Story story,
   ) {
+    final title = story.title;
+    final date = "September 18, 2023 at 10:00 AM";
+    final content = story.story;
     return InkWell(
-      onTap: openStoryPage,
+      onTap: () => openStoryPage(story.id),
       child: Container(
         margin: const EdgeInsets.only(top: Dimens.d20),
         height: Dimens.d200,
@@ -233,7 +228,7 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
     );
   }
 
-  void openStoryPage() {
-    // TODO implement open StoryPage
+  void openStoryPage(id) {
+    ref.read(appNavigatorProvider).push(StoryDetailRoute(id: id));
   }
 }
