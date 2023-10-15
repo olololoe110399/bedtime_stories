@@ -7,7 +7,7 @@
         </intent>
     </queries>
     <application
-        android:label="bedtime_stories"
+        android:label="Unique Bedtime Chronicles"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
