@@ -10,6 +10,7 @@ class Story with _$Story {
     @Default(Story.defaultImagePath) String imagePath,
     @Default(Story.defaultTitle) String title,
     @Default(Story.defaultDate) DateTime? date,
+    @Default(Story.defaultIsStop) bool? isStop,
   }) = _Story;
 
   static const defaultId = "";
@@ -17,4 +18,5 @@ class Story with _$Story {
   static const defaultImagePath = "";
   static const defaultTitle = "";
   static const DateTime? defaultDate = null;
+  static const defaultIsStop = false;
 }

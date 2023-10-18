@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/di/di.dart';
+import 'package:dart_openai/dart_openai.dart';
 
 class AppConfig {
   factory AppConfig.getInstance() {
@@ -17,6 +18,7 @@ class AppConfig {
 
   Future<void> config() async {
     await HiveDatabaseManager().start();
+    OpenAI.apiKey = Env.apiKey;
     // await Firebase.initializeApp();
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);

@@ -4,6 +4,7 @@ import 'package:bedtime_stories/domain/domain.dart';
 import 'package:bedtime_stories/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 @RoutePage()
 class HistoryPage extends StatefulHookConsumerWidget {
@@ -130,17 +131,44 @@ class _PageState extends BasePageState<HistoryPage, HistoryState,
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                constraints: BoxConstraints(
-                  minHeight: mediaQueryData.size.height * 0.6,
-                ),
                 padding: const EdgeInsets.all(Dimens.d30),
                 width: mediaQueryData.size.width,
                 color: Colors.white,
-                child: Column(
-                  children: [
-                    ...stories.map(storyWidget),
-                  ],
-                ),
+                child: stories.isEmpty
+                    ? Column(
+                        children: [
+                          Lottie.asset(
+                            'assets/json/loading.json',
+                            height: Dimens.d150,
+                          ),
+                          const SizedBox(
+                            height: Dimens.d8,
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                AppColors.darkBlue,
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    18.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onPressed: () =>
+                                ref.read(appNavigatorProvider).pop(),
+                            child: const Text('Generate'),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          ...stories.map(storyWidget),
+                        ],
+                      ),
               ),
             ),
           ),

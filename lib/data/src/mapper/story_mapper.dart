@@ -4,7 +4,8 @@ import 'package:bedtime_stories/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable()
-class StoryDataMapper extends BaseDataMapper<StoryHiveModel, Story> {
+class StoryDataMapper extends BaseDataMapper<StoryHiveModel, Story>
+    with DataMapperMixin {
   StoryDataMapper(
     this.usageDataMapper,
     this.choiceDataMapper,
@@ -34,5 +35,15 @@ class StoryDataMapper extends BaseDataMapper<StoryHiveModel, Story> {
     }
 
     return DateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpochInt);
+  }
+
+  @override
+  StoryHiveModel mapToData(Story entity) {
+    return StoryHiveModel(
+      story: entity.story,
+      imagePath: entity.imagePath,
+      title: entity.title,
+      microsecondsSinceEpoch: entity.date?.microsecondsSinceEpoch.toString(),
+    );
   }
 }

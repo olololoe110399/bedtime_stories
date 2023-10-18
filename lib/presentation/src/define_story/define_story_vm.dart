@@ -14,6 +14,7 @@ final defineStoryVMProvider = StateNotifierProvider.autoDispose<DefineStoryVM,
     ref,
     completionUsecase: GetIt.instance.get<CompletionUsecase>(),
     initDatabaseStoryUsecase: GetIt.instance.get<InitDatabaseStoryUsecase>(),
+    saveStoryLocalUsecase: GetIt.instance.get<SaveStoryLocalUsecase>(),
   ),
 );
 
@@ -22,6 +23,7 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
     Ref ref, {
     required this.completionUsecase,
     required this.initDatabaseStoryUsecase,
+    required this.saveStoryLocalUsecase,
   }) : super(const DefineStoryState(), ref) {
     Future.microtask(() {
       add(const DefineStoryEventLoaded());
@@ -30,15 +32,19 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
 
   CompletionUsecase completionUsecase;
   InitDatabaseStoryUsecase initDatabaseStoryUsecase;
+  SaveStoryLocalUsecase saveStoryLocalUsecase;
 
   @override
   void add(DefineStoryEvent event) {
     switch (event) {
       case DefineStoryEventLoaded event:
         onDefineStoryEventLoaded(event);
+        break;
       case DefineStoryEventOnPressed event:
         onDefineStoryEventOnPressed(event);
-        // Add More Event here
+        break;
+      case DefineStoryEventSaveStory event:
+        onDefineStoryEventSaveStory(event);
         break;
       default:
     }
@@ -47,7 +53,22 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   Future<void> onDefineStoryEventLoaded(
     DefineStoryEventLoaded event,
   ) async {
-    await initDatabaseStoryUsecase.call(unit);
+    runCatching(
+      initDatabaseStoryUsecase.call(unit),
+      isHandleLoading: false,
+    );
+  }
+
+  Future<void> onDefineStoryEventSaveStory(
+    DefineStoryEventSaveStory event,
+  ) async {
+    await runCatching(
+      saveStoryLocalUsecase.call(SaveStoryLocalParams(story: event.story)),
+      isHandleLoading: false,
+      doOnSuccess: (id) {
+        navigator.popAndPush(StoryDetailRoute(id: id));
+      },
+    );
   }
 
   Future<void> onDefineStoryEventOnPressed(
@@ -55,24 +76,41 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   ) async {
     final storyPrompt =
         "Please write a short story in ${event.language}. In this event, ${event.childName} is the main character, a ${event.age}-year-old ${event.gender}. The story unfolds at ${event.venue} with the following characters: ${event.characters.join(', ')}. As for the story, create an AI image generator request. This request outlines the overall image, beginning with 'Image Prompt:' at the start. ";
-
-    await runCatching<Story>(
-      completionUsecase.call(
-        CompletionParams(messages: [
-          Message(
-            content:
-                'You are children\'s book author. You are writing a story about ${event.childName}.',
-            role: 'system',
-          ),
-          Message(
-            role: 'user',
-            content: storyPrompt,
-          )
-        ]),
-      ),
-      doOnSuccess: (data) {
-        navigator.popAndPush(StoryDetailRoute(id: data.id));
-      },
-    );
+    emit(state.copyWith(isLoading: true));
+    completionUsecase
+        .call(
+      CompletionParams(messages: [
+        Message(
+          content:
+              'You are children\'s book author. You are writing a story about 500 tokens for ${event.childName}.',
+          role: 'system',
+        ),
+        Message(
+          role: 'user',
+          content: storyPrompt,
+        )
+      ]),
+    )
+        .listen((event) {
+      event.fold(
+        (l) => addException(
+          AppExceptionWrapper(appError: l),
+        ),
+        (r) {
+          emitData(
+            dataState.copyWith(
+              text: (dataState.text ?? "") + r.story,
+            ),
+          );
+          if (r.isStop == true) {
+            add(
+              DefineStoryEventSaveStory(
+                story: r.copyWith(story: dataState.text ?? ''),
+              ),
+            );
+          }
+        },
+      );
+    }).disposeBy(disposeBag);
   }
 }

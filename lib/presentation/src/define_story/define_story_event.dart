@@ -1,4 +1,5 @@
 import 'package:bedtime_stories/core/core.dart';
+import 'package:bedtime_stories/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'define_story_event.freezed.dart';
@@ -20,6 +21,9 @@ class DefineStoryEvent extends BaseEvent with _$DefineStoryEvent {
     required String language,
     required String inferenceId,
   }) = DefineStoryEventOnPressed;
+  const factory DefineStoryEvent.saveStory({
+    required Story story,
+  }) = DefineStoryEventSaveStory;
 
   // Add More Events here
 }

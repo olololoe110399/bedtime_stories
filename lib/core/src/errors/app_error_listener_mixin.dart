@@ -17,7 +17,9 @@ mixin AppErrorListenerMixin<T extends StatefulHookConsumerWidget,
   void onUncaugth(
     AppExceptionWrapper appExceptionWrapper,
   ) {
-    logE(appExceptionWrapper.toString());
+    ref
+        .read(appNavigatorProvider)
+        .showErrorSnackBar(message: appExceptionWrapper.appError.message);
   }
 
   @override

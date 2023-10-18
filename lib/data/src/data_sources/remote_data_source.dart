@@ -1,9 +1,10 @@
 import 'package:bedtime_stories/core/core.dart';
 import 'package:bedtime_stories/data/data.dart';
 import 'package:injectable/injectable.dart';
+import 'package:dart_openai/dart_openai.dart';
 
 abstract class RemoteDataSource {
-  Future<ChatCompletionModel> completion({
+  Stream<OpenAIStreamChatCompletionModel> completion({
     required String model,
     required int maxTokens,
     required double temperature,
@@ -18,19 +19,25 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   RemoteDataSourceImpl({required this.client});
 
   @override
-  Future<ChatCompletionModel> completion({
+  Stream<OpenAIStreamChatCompletionModel> completion({
     required String model,
     required int maxTokens,
     required double temperature,
     required List<MessageModel> messages,
   }) =>
-      client.completions(
-        'Bearer ${Env.apiKey}',
-        ChatRequestModel(
-          model: model,
-          maxTokens: maxTokens,
-          temperature: temperature,
-          messages: messages,
-        ),
+      OpenAI.instance.chat.createStream(
+        model: model,
+        messages: messages
+            .map(
+              (e) => OpenAIChatCompletionChoiceMessageModel(
+                role: e.role == 'user'
+                    ? OpenAIChatMessageRole.user
+                    : OpenAIChatMessageRole.system,
+                content: e.content ?? "",
+              ),
+            )
+            .toList(),
+        maxTokens: maxTokens,
+        temperature: temperature,
       );
 }

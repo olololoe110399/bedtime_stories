@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:bedtime_stories/core/core.dart';
+import 'package:lottie/lottie.dart';
 
 import 'define_story_state.dart';
 import 'define_story_vm.dart';
@@ -45,9 +46,9 @@ class _PageState extends BasePageState<
   Widget buildPage(BuildContext context) {
     final age = useState(1.0);
     final gender = useState<int?>(0);
-    final characters = useState<List<String>>(['']);
-    final childName = useState('');
-    final venue = useState('');
+    final characters = useState<List<String>>(['Luffy']);
+    final childName = useState('Alex');
+    final venue = useState('Wano');
     final language = useState('English');
     final inferenceId = useState('nitrosocke/Arcane-Diffusion');
 
@@ -200,6 +201,54 @@ class _PageState extends BasePageState<
       ),
     );
   }
+
+  @override
+  Widget buildPageLoading() => Scaffold(
+        body: Stack(
+          children: [
+            const ModalBarrier(
+              dismissible: false,
+              color: AppColors.primary,
+            ),
+            Container(
+              padding: const EdgeInsets.all(Dimens.d20),
+              alignment: Alignment.center,
+              child: ListView(
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  Lottie.asset(
+                    'assets/json/loading.json',
+                    height: Dimens.d100,
+                  ),
+                  Text(
+                    'Generating Story...\nPlease wait a moment.',
+                    style: TextStyle(
+                      color: AppColors.darkBlue,
+                      fontSize: Dimens.d18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: Dimens.d18,
+                  ),
+                  Text(
+                    ref.watch(
+                        provider.select((value) => value.data.text ?? '')),
+                    style: const TextStyle(
+                      fontSize: Dimens.d15,
+                      fontWeight: FontWeight.w300,
+                      fontFamily: 'circe',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Center _buildButtonAddCharacters(
     ValueNotifier<List<dynamic>> characters,
