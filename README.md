@@ -245,7 +245,18 @@ git clone https://github.com/olololoe110399/bedtime_stories.git
 cd bedtime_stories
 ```
 
-4 Install dependencies:
+4 create env and config:
+
+```bash
+cp .env.example .env
+```
+
+```
+OPEN_AI_API_KEY=<REPLACE WITH YOUR API KEY>
+HUGGINGFACE_API_KEY=<REPLACE WITH YOUR API KEY>
+```
+
+5 Install dependencies and generate files:
 
 ```bash
 make sync
