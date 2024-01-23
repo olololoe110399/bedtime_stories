@@ -43,4 +43,58 @@ mixin BaseVMMixin<E extends BaseEvent, S extends BaseState>
     );
     await doOnCompleleted?.call();
   }
+
+  void runCatchingStream<T>(
+    Stream<Either<AppError, T>> action, {
+    FutureOr<void> Function(AppError)? doOnError,
+    FutureOr<void> Function(T)? doOnSuccess,
+    Future<void> Function()? doOnRetry,
+    FutureOr<void> Function()? doOnCompleleted,
+    bool isHandleLoading = true,
+    bool isHandleError = true,
+  }) {
+    if (isHandleLoading) {
+      showLoading();
+    }
+    action.listen(
+      (value) {
+        value.fold(
+          (appError) {
+            if (isHandleError) {
+              addException(
+                AppExceptionWrapper(
+                  appError: appError,
+                  doOnRetry: doOnRetry,
+                ),
+              );
+            }
+            doOnError?.call(appError);
+          },
+          (r) {
+            doOnSuccess?.call(r);
+          },
+        );
+      },
+      onError: (error) {
+        if (isHandleLoading) {
+          hideLoading();
+        }
+        if (isHandleError) {
+          addException(
+            AppExceptionWrapper(
+              appError: AppError.unknownError(error),
+              doOnRetry: doOnRetry,
+            ),
+          );
+        }
+        doOnError?.call(AppError.unknownError(error));
+      },
+      onDone: () {
+        if (isHandleLoading) {
+          hideLoading();
+        }
+        doOnCompleleted?.call();
+      },
+    ).disposeBy(disposeBag);
+  }
 }

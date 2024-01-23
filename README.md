@@ -20,7 +20,6 @@ Introducing **Unique Bedtime Chronicles** the groundbreaking mobile application 
 - [Libraries Used](#libraries-used)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Tests](#tests)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -233,6 +232,13 @@ Introducing **Unique Bedtime Chronicles** the groundbreaking mobile application 
 
 Make sure you have Flutter and Dart installed on your machine. You can install them by following the instructions in the [official Flutter documentation](https://flutter.dev/docs/get-started/install).
 
+Flutter 3.13.9 • channel stable
+Framework • revision d211f42860 (3 months ago) • 2023-10-25 13:42:25 -0700
+Engine • revision 0545f8705d
+Tools • Dart 3.1.5 • DevTools 2.25.0
+
+COCOAPODS: 1.14.3
+
 2 Clone this repository:
 
 ```bash
@@ -251,9 +257,8 @@ cd bedtime_stories
 cp .env.example .env
 ```
 
-```
+```.env
 OPEN_AI_API_KEY=<REPLACE WITH YOUR API KEY>
-HUGGINGFACE_API_KEY=<REPLACE WITH YOUR API KEY>
 ```
 
 5 Install dependencies and generate files:
@@ -271,16 +276,6 @@ flutter run
 ```
 
 The app should start and you can explore the Valorant agents.
-
-## Tests
-
-The project includes unit tests, integration tests, and widget tests to ensure code quality and functionality. To run tests, use the following commands:
-
-- Run tests
-
-```bash
-flutter test
-```
 
 ## Contributing
 

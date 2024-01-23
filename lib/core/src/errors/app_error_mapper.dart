@@ -5,8 +5,6 @@ class ErrorMapperFactory {
   static AppError map(Object error) {
     switch (error.runtimeType) {
       case DioException:
-        print(error);
-        print((error as DioException).response);
         final message =
             (error as DioException).response?.data['error']['message'];
         return AppError(

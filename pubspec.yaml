@@ -71,6 +71,9 @@ dependencies:
   flutter_tts: ^3.8.3
   avatar_glow: ^2.0.2
   dart_openai: ^4.0.0
+  intl_utils: ^2.8.5
+  path_provider: ^2.1.2
+  path: ^1.8.3
 
 dev_dependencies:
   auto_route_generator: ^7.3.1
