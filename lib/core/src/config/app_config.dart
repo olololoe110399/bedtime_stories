@@ -19,6 +19,9 @@ class AppConfig {
   Future<void> config() async {
     await HiveDatabaseManager().start();
     OpenAI.apiKey = Env.apiKey;
+    OpenAI.requestsTimeOut = const Duration(seconds: 60);
+    OpenAI.showLogs = LogConstants.enableLog;
+    OpenAI.showResponsesLogs = LogConstants.enableLog;
     // await Firebase.initializeApp();
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);

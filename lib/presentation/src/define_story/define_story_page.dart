@@ -51,204 +51,276 @@ class _PageState extends BasePageState<
     final venue = useState('Wano');
     final language = useState('English');
     final inferenceId = useState('nitrosocke/Arcane-Diffusion');
+    final scrollController = useScrollController();
 
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () => ref.read(appNavigatorProvider).pop(),
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: Dimens.d30,
+    ref.listen(
+      provider.select((value) => value.data.text),
+      (prevText, nextText) {
+        final loading = ref.read(
+          provider.select((value) => value.data.loading),
+        );
+        if (nextText != null && loading) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOut,
+          );
+        }
+      },
+    );
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppColors.primary,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () => ref.read(appNavigatorProvider).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+                size: Dimens.d30,
+              ),
+            ),
+            title: const Text(
+              "Define your story",
+              style: TextStyle(
+                fontSize: Dimens.d26,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'circe',
+                color: AppColors.black,
+              ),
+            ),
           ),
-        ),
-        title: const Text(
-          "Define your story",
-          style: TextStyle(
-            fontSize: Dimens.d26,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'circe',
-            color: AppColors.black,
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.all(Dimens.d20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTitle(
-                          'Child\'s name',
+          body: SafeArea(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(Dimens.d20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildTitle(
+                              'Child\'s name',
+                            ),
+                            const SizedBox(
+                              height: Dimens.d10,
+                            ),
+                            DynamicTextfield(
+                              hintText: "Alex",
+                              initialValue: childName.value,
+                              onChanged: (v) => childName.value = v,
+                            ),
+                            const SizedBox(
+                              height: Dimens.d20,
+                            ),
+                            _buildTitle(
+                              'Child\' age: ${age.value.round()} years',
+                            ),
+                            const SizedBox(
+                              height: Dimens.d5,
+                            ),
+                            Slider(
+                              value: age.value.roundToDouble(),
+                              min: 1,
+                              max: 10,
+                              divisions: 10,
+                              thumbColor: AppColors.darkBlue,
+                              inactiveColor: AppColors.white,
+                              activeColor: AppColors.darkBlue,
+                              label: age.value.round().toString(),
+                              onChanged: (double value) => age.value = value,
+                            ),
+                            const SizedBox(
+                              height: Dimens.d20,
+                            ),
+                            _buildTitle('Gender:'),
+                            const SizedBox(
+                              height: Dimens.d5,
+                            ),
+                            _buildGender(gender),
+                            const SizedBox(
+                              height: Dimens.d20,
+                            ),
+                            _buildTitle('Where does the story play?'),
+                            const SizedBox(
+                              height: Dimens.d10,
+                            ),
+                            DynamicTextfield(
+                              hintText: "e.g. in a castle, on Mars",
+                              initialValue: venue.value,
+                              onChanged: (v) => venue.value = v,
+                            ),
+                            const SizedBox(
+                              height: Dimens.d20,
+                            ),
+                            _buildTitle(
+                              'Additional characters:',
+                            ),
+                            const SizedBox(
+                              height: Dimens.d5,
+                            ),
+                            _buildTitle(
+                              'Add your child\' favorite characters to the story!',
+                              fontSize: Dimens.d12,
+                            ),
+                            const SizedBox(
+                              height: Dimens.d10,
+                            ),
+                            _buildCharacters(characters),
+                            if (characters.value.length < 5) ...[
+                              const SizedBox(
+                                height: Dimens.d10,
+                              ),
+                              _buildButtonAddCharacters(characters),
+                            ]
+                          ],
                         ),
-                        const SizedBox(
-                          height: Dimens.d10,
-                        ),
-                        DynamicTextfield(
-                          hintText: "Alex",
-                          initialValue: childName.value,
-                          onChanged: (v) => childName.value = v,
-                        ),
-                        const SizedBox(
-                          height: Dimens.d20,
-                        ),
-                        _buildTitle(
-                          'Child\' age: ${age.value.round()} years',
-                        ),
-                        const SizedBox(
-                          height: Dimens.d5,
-                        ),
-                        Slider(
-                          value: age.value.roundToDouble(),
-                          min: 1,
-                          max: 10,
-                          divisions: 10,
-                          thumbColor: AppColors.darkBlue,
-                          inactiveColor: AppColors.white,
-                          activeColor: AppColors.darkBlue,
-                          label: age.value.round().toString(),
-                          onChanged: (double value) => age.value = value,
-                        ),
-                        const SizedBox(
-                          height: Dimens.d20,
-                        ),
-                        _buildTitle('Gender:'),
-                        const SizedBox(
-                          height: Dimens.d5,
-                        ),
-                        _buildGender(gender),
-                        const SizedBox(
-                          height: Dimens.d20,
-                        ),
-                        _buildTitle('Where does the story play?'),
-                        const SizedBox(
-                          height: Dimens.d10,
-                        ),
-                        DynamicTextfield(
-                          hintText: "e.g. in a castle, on Mars",
-                          initialValue: venue.value,
-                          onChanged: (v) => venue.value = v,
-                        ),
-                        const SizedBox(
-                          height: Dimens.d20,
-                        ),
-                        _buildTitle(
-                          'Additional characters:',
-                        ),
-                        const SizedBox(
-                          height: Dimens.d5,
-                        ),
-                        _buildTitle(
-                          'Add your child\' favorite characters to the story!',
-                          fontSize: Dimens.d12,
-                        ),
-                        const SizedBox(
-                          height: Dimens.d10,
-                        ),
-                        _buildCharacters(characters),
-                        if (characters.value.length < 5) ...[
-                          const SizedBox(
-                            height: Dimens.d10,
-                          ),
-                          _buildButtonAddCharacters(characters),
-                        ]
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.d20,
+                      vertical: Dimens.d10,
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.darkBlue,
+                        minimumSize: const Size.fromHeight(50),
+                      ),
+                      onPressed: () {
+                        ViewUtils.hideKeyboard(context);
+                        if (_formKey.currentState?.validate() ?? false) {
+                          ref.read(provider.notifier).add(
+                                DefineStoryEvent.onPressed(
+                                  age: age.value.round().toString(),
+                                  gender: titleGender(gender.value),
+                                  characters: characters.value,
+                                  childName: childName.value,
+                                  venue: venue.value,
+                                  language: language.value,
+                                  inferenceId: inferenceId.value,
+                                ),
+                              );
+                        }
+                      },
+                      child: const Text('Next'),
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.d20,
-                  vertical: Dimens.d10,
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.darkBlue,
-                    minimumSize: const Size.fromHeight(50),
-                  ),
-                  onPressed: () {
-                    ViewUtils.hideKeyboard(context);
-                    if (_formKey.currentState?.validate() ?? false) {
-                      ref.read(provider.notifier).add(
-                            DefineStoryEvent.onPressed(
-                              age: age.value.round().toString(),
-                              gender: titleGender(gender.value),
-                              characters: characters.value,
-                              childName: childName.value,
-                              venue: venue.value,
-                              language: language.value,
-                              inferenceId: inferenceId.value,
-                            ),
-                          );
-                    }
-                  },
-                  child: const Text('Next'),
-                ),
-              )
-            ],
+            ),
           ),
         ),
+        Visibility(
+          visible: ref.watch(
+            provider.select((value) => value.data.loading),
+          ),
+          child: _buildPageLoading(
+            scrollController: scrollController,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildPageLoading({
+    required ScrollController scrollController,
+  }) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          const ModalBarrier(
+            dismissible: false,
+            color: AppColors.primary,
+          ),
+          Container(
+            padding: const EdgeInsets.all(Dimens.d20),
+            alignment: Alignment.center,
+            child: ListView(
+              physics: const ClampingScrollPhysics(),
+              controller: scrollController,
+              shrinkWrap: true,
+              children: [
+                Lottie.asset(
+                  'assets/json/loading.json',
+                  height: Dimens.d100,
+                ),
+                Text(
+                  'Generating Story...\nPlease wait a moment.',
+                  style: TextStyle(
+                    color: AppColors.darkBlue,
+                    fontSize: Dimens.d18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: Dimens.d18,
+                ),
+                Text(
+                  ref.watch(
+                    provider.select((value) => value.data.text ?? ''),
+                  ),
+                  style: const TextStyle(
+                    fontSize: Dimens.d15,
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'circe',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
-  Widget buildPageLoading() => Scaffold(
-        body: Stack(
-          children: [
-            const ModalBarrier(
-              dismissible: false,
-              color: AppColors.primary,
+  Widget buildPageLoading() {
+    return Scaffold(
+      body: Stack(
+        children: [
+          const ModalBarrier(
+            dismissible: false,
+            color: AppColors.primary,
+          ),
+          Container(
+            padding: const EdgeInsets.all(Dimens.d20),
+            alignment: Alignment.center,
+            child: ListView(
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              children: [
+                Lottie.asset(
+                  'assets/json/loading.json',
+                  height: Dimens.d100,
+                ),
+                Text(
+                  ref.watch(
+                    provider.select((value) => value.data.text ?? ''),
+                  ),
+                  style: TextStyle(
+                    color: AppColors.darkBlue,
+                    fontSize: Dimens.d18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.all(Dimens.d20),
-              alignment: Alignment.center,
-              child: ListView(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                children: [
-                  Lottie.asset(
-                    'assets/json/loading.json',
-                    height: Dimens.d100,
-                  ),
-                  Text(
-                    'Generating Story...\nPlease wait a moment.',
-                    style: TextStyle(
-                      color: AppColors.darkBlue,
-                      fontSize: Dimens.d18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: Dimens.d18,
-                  ),
-                  Text(
-                    ref.watch(
-                        provider.select((value) => value.data.text ?? '')),
-                    style: const TextStyle(
-                      fontSize: Dimens.d15,
-                      fontWeight: FontWeight.w300,
-                      fontFamily: 'circe',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Center _buildButtonAddCharacters(
     ValueNotifier<List<dynamic>> characters,
@@ -286,7 +358,6 @@ class _PageState extends BasePageState<
         children: [
           Expanded(
             child: DynamicTextfield(
-              key: UniqueKey(),
               initialValue: characters.value[index],
               onChanged: (v) => characters.value[index] = v,
             ),

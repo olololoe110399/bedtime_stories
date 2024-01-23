@@ -39,11 +39,12 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
   }
 
   @override
-  Stream<Result<Story>> completion(
-      {required String model,
-      required int maxTokens,
-      required double temperature,
-      required List<Message> messages}) {
+  Stream<Result<Story>> completion({
+    required String model,
+    required int maxTokens,
+    required double temperature,
+    required List<Message> messages,
+  }) {
     return remoteDataSource
         .completion(
       model: model,
@@ -56,7 +57,8 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
         if (event.choices.isEmpty) {
           throw Exception('choices is empty');
         }
-        final String newStory = event.choices.first.delta.content ?? "";
+        final String newStory =
+            event.choices.first.delta.content?.first.text ?? "";
         final storyModel = StoryHiveModel(
           story: newStory,
           imagePath: '',
@@ -123,13 +125,27 @@ class OpenAIRepositoryImpl implements OpenAIRepository {
               storyParagraphs.add(paragraph);
             }
           }
+
           final storyModel = storyDataMapper.mapToData(story);
-          final storyLocal = storyModel.copyWith(
+          var storyLocal = storyModel.copyWith(
             story: storyParagraphs.join('\n\n'),
             imagePath: imagePrompts.isEmpty ? '' : imagePrompts.first,
             title: titleStory.isEmpty ? '' : titleStory.first,
             microsecondsSinceEpoch: StringUtils.idGenerator(),
           );
+
+          if ((storyLocal.imagePath ?? '').isNotEmpty) {
+            final openAIImageModel = await remoteDataSource.createImage(
+              prompt: storyLocal.imagePath ?? '',
+            );
+
+            if (openAIImageModel.data.isNotEmpty) {
+              storyLocal = storyLocal.copyWith(
+                imagePath: openAIImageModel.data.first.url,
+              );
+            }
+          }
+
           localDataSource.addStoryItem(storyLocal);
           return storyLocal.key;
         },

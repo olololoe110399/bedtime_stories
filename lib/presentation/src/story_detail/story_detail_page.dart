@@ -41,6 +41,16 @@ class _PageState extends BasePageState<
     }
   }
 
+  bool iVailUrl(String url) {
+    if (url.isEmpty) {
+      return false;
+    }
+    return [
+      'https://',
+      'http://',
+    ].any((element) => url.startsWith(element));
+  }
+
   @override
   Widget buildPage(BuildContext context) {
     void initLanguages() async {}
@@ -54,6 +64,14 @@ class _PageState extends BasePageState<
     }, const []);
 
     final story = ref.watch(provider.select((value) => value.data.story));
+
+    if (story == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     final isSpeaking =
         ref.watch(provider.select((value) => value.data.isSpeaking));
     return Scaffold(
@@ -84,22 +102,22 @@ class _PageState extends BasePageState<
         child: SingleChildScrollView(
           child: Column(
             children: [
-              if (story != null)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: Dimens.d16,
-                    left: Dimens.d16,
-                    right: Dimens.d16,
-                  ),
-                  child: Text(
-                    story.title.replaceFirst('Title: ', ''),
-                    style: const TextStyle(
-                      fontSize: Dimens.d26,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.black,
-                    ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: Dimens.d16,
+                  left: Dimens.d16,
+                  right: Dimens.d16,
+                ),
+                child: Text(
+                  story.title.replaceFirst('Title: ', ''),
+                  style: const TextStyle(
+                    fontSize: Dimens.d26,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
                   ),
                 ),
+              ),
+
               AvatarGlow(
                 glowColor: AppColors.darkBlue,
                 endRadius: 90.0,
@@ -139,18 +157,29 @@ class _PageState extends BasePageState<
                   ),
                 ),
               ),
-              if (story != null)
-                Padding(
-                  padding: const EdgeInsets.all(Dimens.d16),
-                  child: Text(
-                    story.story,
-                    style: TextStyle(
-                      fontSize: Dimens.d20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.darkBlue,
-                    ),
+              if (iVailUrl(story.imagePath))
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(
+                    left: Dimens.d16,
+                    right: Dimens.d16,
+                  ),
+                  child: Image.network(
+                    story.imagePath,
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
+              Padding(
+                padding: const EdgeInsets.all(Dimens.d16),
+                child: Text(
+                  story.story,
+                  style: TextStyle(
+                    fontSize: Dimens.d20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.darkBlue,
+                  ),
+                ),
+              ),
 
               // if (story != null)
               //   Padding(

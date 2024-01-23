@@ -13,6 +13,8 @@ Introducing **Unique Bedtime Chronicles** the groundbreaking mobile application 
 |![alt text](screenshot/start.png)|![alt text](screenshot/define_story.png)|![alt text](screenshot/story_detail.png)|
 |![alt text](screenshot/story_detail_speak.png)|![alt text](screenshot/loading.png)|![alt text](screenshot/history.png)|
 
+https://github.com/olololoe110399/bedtime_stories/assets/58255731/28ebb23b-486f-48f2-8ca7-724a9397d008
+
 ## Table of Contents
 
 - [Features](#features)
@@ -232,10 +234,12 @@ Introducing **Unique Bedtime Chronicles** the groundbreaking mobile application 
 
 Make sure you have Flutter and Dart installed on your machine. You can install them by following the instructions in the [official Flutter documentation](https://flutter.dev/docs/get-started/install).
 
+```bash
 Flutter 3.13.9 • channel stable
 Framework • revision d211f42860 (3 months ago) • 2023-10-25 13:42:25 -0700
 Engine • revision 0545f8705d
 Tools • Dart 3.1.5 • DevTools 2.25.0
+```
 
 COCOAPODS: 1.14.3
 

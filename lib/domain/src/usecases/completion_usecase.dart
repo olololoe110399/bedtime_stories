@@ -26,8 +26,8 @@ class CompletionParams extends Equatable {
 
   const CompletionParams({
     this.model = 'gpt-3.5-turbo',
-    this.maxTokens = 500,
-    this.temperature = 0.7,
+    this.maxTokens = 1000,
+    this.temperature = 1,
     required this.messages,
   });
 

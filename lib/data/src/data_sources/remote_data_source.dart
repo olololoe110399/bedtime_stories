@@ -10,6 +10,16 @@ abstract class RemoteDataSource {
     required double temperature,
     required List<MessageModel> messages,
   });
+
+  Future<OpenAIImageModel> createImage({
+    required String prompt,
+    String? model,
+    int? n,
+    OpenAIImageSize? size,
+    OpenAIImageStyle? style,
+    OpenAIImageQuality? quality,
+    OpenAIImageResponseFormat? responseFormat,
+  });
 }
 
 @LazySingleton(as: RemoteDataSource)
@@ -33,11 +43,36 @@ class RemoteDataSourceImpl implements RemoteDataSource {
                 role: e.role == 'user'
                     ? OpenAIChatMessageRole.user
                     : OpenAIChatMessageRole.system,
-                content: e.content ?? "",
+                content: [
+                  OpenAIChatCompletionChoiceMessageContentItemModel.text(
+                    e.content ?? "",
+                  ),
+                ],
               ),
             )
             .toList(),
         maxTokens: maxTokens,
         temperature: temperature,
       );
+
+  @override
+  Future<OpenAIImageModel> createImage({
+    required String prompt,
+    int? n = 1,
+    OpenAIImageSize? size = OpenAIImageSize.size256,
+    OpenAIImageStyle? style = OpenAIImageStyle.vivid,
+    OpenAIImageQuality? quality = OpenAIImageQuality.hd,
+    OpenAIImageResponseFormat? responseFormat = OpenAIImageResponseFormat.url,
+    String? model,
+  }) {
+    return OpenAI.instance.image.create(
+      prompt: prompt,
+      model: model,
+      n: n,
+      size: size,
+      style: style,
+      quality: quality,
+      responseFormat: responseFormat,
+    );
+  }
 }

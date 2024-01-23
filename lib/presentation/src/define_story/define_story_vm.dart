@@ -62,9 +62,13 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   Future<void> onDefineStoryEventSaveStory(
     DefineStoryEventSaveStory event,
   ) async {
+    emitData(
+      dataState.copyWith(
+        text: 'Generating Image...\nPlease wait a moment.',
+      ),
+    );
     await runCatching(
       saveStoryLocalUsecase.call(SaveStoryLocalParams(story: event.story)),
-      isHandleLoading: false,
       doOnSuccess: (id) {
         navigator.popAndPush(StoryDetailRoute(id: id));
       },
@@ -74,22 +78,38 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   Future<void> onDefineStoryEventOnPressed(
     DefineStoryEventOnPressed event,
   ) async {
-    final storyPrompt =
-        "Please write a short story in ${event.language}. In this event, ${event.childName} is the main character, a ${event.age}-year-old ${event.gender}. The story unfolds at ${event.venue} with the following characters: ${event.characters.join(', ')}. As for the story, create an AI image generator request. This request outlines the overall image, beginning with 'Image Prompt:' at the start. ";
+    final storyPrompts = [
+      'Please write me a short ${event.language} story.',
+      'In this story, ${event.childName} is the main character, is ${event.age}-year-old and ${event.gender}.',
+      'The story takes place at ${event.venue} with the following characters: ${event.characters.join(', ')}.',
+      'First content is story title and have the words \'Title:\' at the start.',
+      'After story title, write me an image prompt for an AI image generator and have the words \'Image Prompt:\' at the start.',
+      'Choose a book illustrator and put something in the image prompt to say the image should be made in the style of that artist.',
+    ];
+    final storyPrompt = storyPrompts.join(' ');
+    emitData(dataState.copyWith(loading: true));
     runCatchingStream(
       completionUsecase.call(
-        CompletionParams(messages: [
-          Message(
-            content:
-                'You are children\'s book author. You are writing a story about 500 tokens for ${event.childName}.',
-            role: 'system',
-          ),
-          Message(
-            role: 'user',
-            content: storyPrompt,
-          )
-        ]),
+        CompletionParams(
+          messages: [
+            const Message(
+              content: "You are a children's author.",
+              role: 'system',
+            ),
+            Message(
+              role: 'user',
+              content: storyPrompt,
+            )
+          ],
+        ),
       ),
+      isHandleLoading: false,
+      doOnCompleleted: () {
+        emitData(dataState.copyWith(loading: false));
+      },
+      doOnError: (error) {
+        emitData(dataState.copyWith(loading: false));
+      },
       doOnSuccess: (data) {
         emitData(
           dataState.copyWith(
@@ -97,7 +117,6 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
           ),
         );
         if (data.isStop == true) {
-          hideLoading();
           add(
             DefineStoryEventSaveStory(
               story: data.copyWith(story: dataState.text ?? ''),
