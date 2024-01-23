@@ -25,6 +25,12 @@ class AppError {
           appExceptionType == other.appExceptionType &&
           message == other.message &&
           error == other.error;
+
+  static AppError unknownError(dynamic error) => AppError(
+        appExceptionType: AppExceptionType.uncaugth,
+        message: 'Unknown error',
+        error: error,
+      );
 }
 
 enum AppExceptionType {

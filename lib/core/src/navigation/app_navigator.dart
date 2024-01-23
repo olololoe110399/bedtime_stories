@@ -22,10 +22,10 @@ class AppNavigator with LogMixin {
 
   StackRouter get _currentTabRouterOrRootRouter =>
       _currentTabRouter ?? appRouter;
-  BuildContext? get _currentTabRouterContext =>
-      _currentTabRouter?.navigatorKey.currentContext;
-  BuildContext get _currentTabContextOrRootContext =>
-      _currentTabRouterContext ?? _rootRouterContext;
+  // BuildContext? get _currentTabRouterContext =>
+  //     _currentTabRouter?.navigatorKey.currentContext;
+  // BuildContext get _currentTabContextOrRootContext =>
+  //     _currentTabRouterContext ?? _rootRouterContext;
 
   bool get canPopSelfOrChildren => appRouter.canPop();
 

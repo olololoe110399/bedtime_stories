@@ -6,6 +6,7 @@ feature_template:
 sync:
 	flutter pub get
 	dart run build_runner build  --delete-conflicting-outputs
+	dart run intl_utils:generate
 
 wr:
 	dart run build_runner watch  --delete-conflicting-outputs

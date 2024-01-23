@@ -76,41 +76,35 @@ class DefineStoryVM extends BaseVM<DefineStoryEvent, DefineStoryState> {
   ) async {
     final storyPrompt =
         "Please write a short story in ${event.language}. In this event, ${event.childName} is the main character, a ${event.age}-year-old ${event.gender}. The story unfolds at ${event.venue} with the following characters: ${event.characters.join(', ')}. As for the story, create an AI image generator request. This request outlines the overall image, beginning with 'Image Prompt:' at the start. ";
-    emit(state.copyWith(isLoading: true));
-    completionUsecase
-        .call(
-      CompletionParams(messages: [
-        Message(
-          content:
-              'You are children\'s book author. You are writing a story about 500 tokens for ${event.childName}.',
-          role: 'system',
-        ),
-        Message(
-          role: 'user',
-          content: storyPrompt,
-        )
-      ]),
-    )
-        .listen((event) {
-      event.fold(
-        (l) => addException(
-          AppExceptionWrapper(appError: l),
-        ),
-        (r) {
-          emitData(
-            dataState.copyWith(
-              text: (dataState.text ?? "") + r.story,
+    runCatchingStream(
+      completionUsecase.call(
+        CompletionParams(messages: [
+          Message(
+            content:
+                'You are children\'s book author. You are writing a story about 500 tokens for ${event.childName}.',
+            role: 'system',
+          ),
+          Message(
+            role: 'user',
+            content: storyPrompt,
+          )
+        ]),
+      ),
+      doOnSuccess: (data) {
+        emitData(
+          dataState.copyWith(
+            text: (dataState.text ?? "") + data.story,
+          ),
+        );
+        if (data.isStop == true) {
+          hideLoading();
+          add(
+            DefineStoryEventSaveStory(
+              story: data.copyWith(story: dataState.text ?? ''),
             ),
           );
-          if (r.isStop == true) {
-            add(
-              DefineStoryEventSaveStory(
-                story: r.copyWith(story: dataState.text ?? ''),
-              ),
-            );
-          }
-        },
-      );
-    }).disposeBy(disposeBag);
+        }
+      },
+    );
   }
 }
